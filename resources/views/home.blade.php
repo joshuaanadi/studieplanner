@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Study Planner Dashboard</title>
+    <title>Study Planner - Home</title>
 
     <style>
         *{
@@ -17,13 +17,10 @@
             background:#f4f6f9;
         }
 
-        /* Navbar */
-
         .navbar{
             background:#2563eb;
             color:white;
             padding:20px 40px;
-
             display:flex;
             justify-content:space-between;
             align-items:center;
@@ -43,10 +40,9 @@
             font-weight:bold;
         }
 
-        /* Container */
-
         .container{
             width:90%;
+            max-width:1200px;
             margin:30px auto;
         }
 
@@ -56,15 +52,14 @@
 
         .welcome h2{
             color:#333;
+            margin-bottom:5px;
         }
-
-        /* Stats */
 
         .stats{
             display:grid;
             grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
             gap:20px;
-            margin-bottom:40px;
+            margin-bottom:30px;
         }
 
         .card{
@@ -85,29 +80,24 @@
             color:#2563eb;
         }
 
-        /* Tasks */
+        .actions{
+            margin-bottom:20px;
+        }
+
+        .add-btn{
+            display:inline-block;
+            text-decoration:none;
+            background:#22c55e;
+            color:white;
+            padding:12px 20px;
+            border-radius:6px;
+        }
 
         .tasks-section{
             background:white;
             padding:25px;
             border-radius:12px;
             box-shadow:0 2px 10px rgba(0,0,0,.08);
-        }
-
-        .tasks-header{
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            margin-bottom:20px;
-        }
-
-        .add-btn{
-            background:#22c55e;
-            color:white;
-            border:none;
-            padding:10px 18px;
-            border-radius:6px;
-            cursor:pointer;
         }
 
         table{
@@ -129,146 +119,162 @@
         .status{
             padding:5px 10px;
             border-radius:20px;
-            font-size:14px;
+            font-size:13px;
         }
 
         .todo{
             background:#fee2e2;
         }
 
-        .progress{
+        .in-progress{
             background:#fef3c7;
         }
 
-        .done{
+        .completed{
             background:#dcfce7;
         }
 
-        .action-btn{
-            padding:6px 12px;
-            border:none;
-            border-radius:5px;
-            cursor:pointer;
+        .empty{
+            text-align:center;
+            padding:30px;
+            color:#777;
         }
 
-        .edit{
-            background:#3b82f6;
-            color:white;
+        .priority-high{
+            color:red;
+            font-weight:bold;
         }
 
-        .delete{
-            background:#ef4444;
-            color:white;
+        .priority-medium{
+            color:orange;
+            font-weight:bold;
+        }
+
+        .priority-low{
+            color:green;
+            font-weight:bold;
         }
     </style>
 </head>
 <body>
 
 <nav class="navbar">
+
     <h1>Study Planner</h1>
 
-    <form action="/logout" method="POST">
+    <form action="{{ route('logout') }}" method="POST">
         @csrf
         <button class="logout-btn">
             Logout
         </button>
     </form>
+
 </nav>
 
 <div class="container">
 
     <div class="welcome">
-        <h2>Welcome, {{ Auth::user()->name }}</h2>
-        <p>Manage your study tasks and deadlines.</p>
+        <h2>Welcome, {{ auth()->user()->name }}</h2>
+        <p>Manage your school tasks and deadlines.</p>
     </div>
 
     <div class="stats">
 
         <div class="card">
             <h3>Open Tasks</h3>
-            <p>5</p>
+            <p>{{ $openTasks }}</p>
         </div>
 
         <div class="card">
             <h3>Completed Tasks</h3>
-            <p>12</p>
+            <p>{{ $completedTasks }}</p>
         </div>
 
         <div class="card">
-            <h3>Upcoming Deadlines</h3>
-            <p>3</p>
+            <h3>Total Tasks</h3>
+            <p>{{ $tasks->count() }}</p>
         </div>
+
+    </div>
+
+    <div class="actions">
+
+        <a href="/tasks/create" class="add-btn">
+            + Add New Task
+        </a>
 
     </div>
 
     <div class="tasks-section">
 
-        <div class="tasks-header">
-            <h2>My Tasks</h2>
-
-            <button class="add-btn">
-                + Add Task
-            </button>
-        </div>
+        <h2 style="margin-bottom:20px;">
+            My Tasks
+        </h2>
 
         <table>
 
             <thead>
             <tr>
                 <th>Title</th>
+                <th>Description</th>
                 <th>Deadline</th>
                 <th>Priority</th>
                 <th>Status</th>
-                <th>Actions</th>
             </tr>
             </thead>
 
             <tbody>
 
-            <tr>
-                <td>Laravel Assignment</td>
-                <td>20-06-2026</td>
-                <td>High</td>
-                <td>
-                            <span class="status progress">
-                                In Progress
-                            </span>
-                </td>
-                <td>
-                    <button class="action-btn edit">Edit</button>
-                    <button class="action-btn delete">Delete</button>
-                </td>
-            </tr>
+            @forelse($tasks as $task)
 
-            <tr>
-                <td>Database Design</td>
-                <td>22-06-2026</td>
-                <td>Medium</td>
-                <td>
+                <tr>
+
+                    <td>{{ $task->title }}</td>
+
+                    <td>{{ $task->description }}</td>
+
+                    <td>{{ $task->deadline }}</td>
+
+                    <td class="priority-{{ $task->priority }}">
+                        {{ ucfirst($task->priority) }}
+                    </td>
+
+                    <td>
+
+                        @if($task->status === 'todo')
                             <span class="status todo">
                                 To Do
                             </span>
-                </td>
-                <td>
-                    <button class="action-btn edit">Edit</button>
-                    <button class="action-btn delete">Delete</button>
-                </td>
-            </tr>
 
-            <tr>
-                <td>Testing Report</td>
-                <td>18-06-2026</td>
-                <td>High</td>
-                <td>
-                            <span class="status done">
+                        @elseif($task->status === 'in_progress')
+                            <span class="status in-progress">
+                                In Progress
+                            </span>
+
+                        @else
+                            <span class="status completed">
                                 Completed
                             </span>
-                </td>
-                <td>
-                    <button class="action-btn edit">Edit</button>
-                    <button class="action-btn delete">Delete</button>
-                </td>
-            </tr>
+                        @endif
+
+                    </td>
+                    <td>
+                        <a href="/tasks/{{ $task->id }}/edit">
+                            Edit
+                        </a>
+                    </td>
+
+                </tr>
+
+            @empty
+
+                <tr>
+                    <td colspan="5" class="empty">
+                        No tasks found. Create your first task!
+                    </td>
+                </tr>
+
+            @endforelse
 
             </tbody>
 
