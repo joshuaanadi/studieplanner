@@ -38,6 +38,9 @@ Route::get('/home', [HomeController::class, 'index'])
     ->middleware('auth')
     ->name('home');
 
+Route::get('/tasks/{task}', [TaskController::class, 'show'])
+    ->middleware('auth');
+
 Route::get('/tasks/{task}/edit', [TaskController::class, 'edit'])
     ->middleware('auth');
 

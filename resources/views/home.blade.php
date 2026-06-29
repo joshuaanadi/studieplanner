@@ -259,13 +259,17 @@
 
                     </td>
                     <td>
+                    <a href="/tasks/{{ $task->id }}">
+                        View
+                    </a>
+                    </td>
+                    <td>
                         <a href="/tasks/{{ $task->id }}/edit">
                             Edit
                         </a>
                     </td>
                     <td>
                         <form action="/tasks/{{ $task->id }}" method="POST">
-                              method="POST"
                             @csrf
                             @method('DELETE')
 
