@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use Illuminate\Http\Request;
 
+
 class TaskController extends Controller
 {
     public function index()
@@ -64,9 +65,24 @@ class TaskController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Task $task)
     {
-        //
+        if ($task->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $validated = $request->validate([
+            'title' => 'required|max:255',
+            'description' => 'nullable',
+            'deadline' => 'required|date',
+            'priority' => 'required',
+            'status' => 'required'
+        ]);
+
+        $task->update($validated);
+
+        return redirect()->route('home')
+            ->with('success', 'Task updated successfully!');
     }
 
     /**
