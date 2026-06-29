@@ -14,7 +14,7 @@
             min-height:100vh;
         }
 
-        .container{
+        .TaskContainer{
             width:600px;
             background:white;
             padding:30px;
@@ -22,7 +22,7 @@
             box-shadow:0 0 10px rgba(0,0,0,.1);
         }
 
-        h1{
+        .TitleShow{
             margin-bottom:20px;
         }
 
@@ -46,9 +46,9 @@
 </head>
 <body>
 
-<div class="container">
+<div class="TaskContainer">
 
-    <h1>Task Details</h1>
+    <div class="TitleShow">Task Details</div>
 
     <div class="info">
         <strong>Title:</strong>
