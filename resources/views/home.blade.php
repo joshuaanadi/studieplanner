@@ -263,6 +263,16 @@
                             Edit
                         </a>
                     </td>
+                    <td>
+                        <form action="/tasks/{{ $task->id }}" method="POST">
+                              method="POST"
+                            @csrf
+                            @method('DELETE')
+
+                            <button type="submit"> Delete </button>
+
+                        </form>
+                    </td>
 
                 </tr>
 

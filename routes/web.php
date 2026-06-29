@@ -43,3 +43,7 @@ Route::get('/tasks/{task}/edit', [TaskController::class, 'edit'])
 
 Route::put('/tasks/{task}', [TaskController::class, 'update'])
     ->middleware('auth');
+
+
+Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])
+    ->middleware('auth');
